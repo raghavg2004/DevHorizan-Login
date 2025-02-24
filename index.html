@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <!-- Favicons -->
-  <link href="assets/img/logo.png" rel="icon">
-  <link href="assets/img/logo.png" rel="apple-touch-icon">
-    <title>Login | Signup</title>
+    <!-- Favicons -->
+    <link href="assets/img/logo.png" rel="icon">
+    <link href="assets/img/logo.png" rel="apple-touch-icon">
+    <title>DevHorizan Login | Signup</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="app.js"></script>
 </head>
-<body class="flex items-center justify-center h-screen bg-blue-50">
+<body class="flex items-center justify-center h-screen" background="assets/img/hero-bg-light.webp">
+
     <div class="bg-white p-8 rounded-lg shadow-lg w-96">
         <div class="text-center mb-6">
             <img src="assets/img/DH.png" alt="Logo" class="mx-auto">
@@ -28,9 +29,20 @@
                 <input type="email" id="email" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300">
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 relative">
                 <label class="block text-gray-600 mb-1">Password</label>
-                <input type="password" id="password" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300">
+                <input type="password" id="password" class="w-full p-2 border rounded-lg pr-10 focus:ring focus:ring-blue-300">
+                <button type="button" class="absolute right-2 top-9 text-gray-500" id="toggle-password">
+                    👁️
+                </button>
+            </div>
+
+            <div id="confirm-password-field" class="hidden mb-4 relative">
+                <label class="block text-gray-600 mb-1">Confirm Password</label>
+                <input type="password" id="confirm-password" class="w-full p-2 border rounded-lg pr-10 focus:ring focus:ring-blue-300">
+                <button type="button" class="absolute right-2 top-9 text-gray-500" id="toggle-confirm-password">
+                    👁️
+                </button>
             </div>
 
             <button type="submit" id="submit-btn" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
@@ -39,7 +51,7 @@
         </form>
 
         <p class="text-center mt-4 text-gray-600">
-            New to Modernize? 
+            <span id="toggle-text">New to DevHorizan?</span>
             <a href="#" id="toggle-link" class="text-blue-500 font-semibold">Create an account</a>
         </p>
 
@@ -51,5 +63,108 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 space-y-2"></div>
 
+    <script>
+        const toggleLink = document.getElementById("toggle-link");
+        const toggleText = document.getElementById("toggle-text");
+        const nameField = document.getElementById("name-field");
+        const fullNameInput = document.getElementById("full-name");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirm-password");
+        const confirmPasswordField = document.getElementById("confirm-password-field");
+        const submitBtn = document.getElementById("submit-btn");
+        const forgotPassword = document.getElementById("forgot-password");
+        const form = document.getElementById("auth-form");
+        const toastContainer = document.getElementById("toast-container");
+        const togglePassword = document.getElementById("toggle-password");
+        const toggleConfirmPassword = document.getElementById("toggle-confirm-password");
+
+        let isSignUp = false; // Track form state
+
+        toggleLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            isSignUp = !isSignUp;
+
+            if (isSignUp) {
+                nameField.classList.remove("hidden"); // Show full name field
+                confirmPasswordField.classList.remove("hidden"); // Show confirm password field
+                submitBtn.textContent = "Create Account"; // Change button text
+                toggleText.textContent = "Login to DevHorizan"; // Change text
+                toggleLink.textContent = "Sign in"; // Change link text
+                forgotPassword.classList.add("hidden"); // Hide forgot password
+            } else {
+                nameField.classList.add("hidden"); // Hide full name field
+                confirmPasswordField.classList.add("hidden"); // Hide confirm password field
+                submitBtn.textContent = "Sign In"; // Change button text
+                toggleText.textContent = "New to DevHorizan?"; // Change text
+                toggleLink.textContent = "Create an account"; // Change link text
+                forgotPassword.classList.remove("hidden"); // Show forgot password
+            }
+        });
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Validate fields
+            if (isSignUp && fullNameInput.value.trim() === "") {
+                showToast("Full Name is required!", "bg-red-500");
+                return;
+            }
+            if (emailInput.value.trim() === "") {
+                showToast("Email is required!", "bg-red-500");
+                return;
+            }
+            if (passwordInput.value.trim() === "") {
+                showToast("Password is required!", "bg-red-500");
+                return;
+            }
+            if (isSignUp && confirmPasswordInput.value.trim() === "") {
+                showToast("Confirm Password is required!", "bg-red-500");
+                return;
+            }
+            if (isSignUp && passwordInput.value !== confirmPasswordInput.value) {
+                showToast("Passwords do not match!", "bg-red-500");
+                return;
+            }
+
+            // Proceed with Firebase authentication (app.js will handle it)
+            showToast(isSignUp ? "Account Created Successfully!" : "Login Successful!", "bg-green-500");
+            
+            // Simulate navigation after successful login/signup
+            setTimeout(() => {
+                window.location.href = "dashboard.html"; // Redirect to dashboard
+            }, 1500);
+        });
+
+        function showToast(message, bgColor) {
+            const toast = document.createElement("div");
+            toast.className = `text-white p-3 rounded-lg shadow-lg ${bgColor}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Toggle Password Visibility
+        togglePassword.addEventListener("click", () => {
+            toggleVisibility(passwordInput, togglePassword);
+        });
+
+        toggleConfirmPassword.addEventListener("click", () => {
+            toggleVisibility(confirmPasswordInput, toggleConfirmPassword);
+        });
+
+        function toggleVisibility(input, button) {
+            if (input.type === "password") {
+                input.type = "text";
+                button.textContent = "🙈";
+            } else {
+                input.type = "password";
+                button.textContent = "👁️";
+            }
+        }
+    </script>
 </body>
 </html>

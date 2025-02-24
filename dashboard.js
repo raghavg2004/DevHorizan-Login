@@ -24,6 +24,6 @@ onAuthStateChanged(auth, (user) => {
 
 document.getElementById("logout-btn").addEventListener("click", () => {
     signOut(auth).then(() => {
-        window.location.href = "index.html";
+        window.location.href = "https://devhorizan.vercel.app/";
     });
 });

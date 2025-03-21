@@ -25,7 +25,7 @@ const auth = getAuth(app);
 // Redirect user if already logged in
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        window.location.href = "dashboard.html";  // Redirect to Dashboard
+        window.location.href = "https://devhorizan-dashboard.vercel.app/";  // Redirect to Dashboard
     }
 });
 
@@ -66,7 +66,7 @@ authForm.addEventListener("submit", function(event) {
             .then((userCredential) => {
                 showToast("✅ Account created successfully!", "success");
                 authForm.reset();
-                window.location.href = "dashboard.html";  // Redirect to Dashboard
+                window.location.href = "https://devhorizan-dashboard.vercel.app/";  // Redirect to Dashboard
             })
             .catch((error) => {
                 showToast(`❌ ${error.message}`, "error");
@@ -77,7 +77,7 @@ authForm.addEventListener("submit", function(event) {
             .then((userCredential) => {
                 showToast("✅ Logged in successfully!", "success");
                 authForm.reset();
-                window.location.href = "dashboard.html";  // Redirect to Dashboard
+                window.location.href = "https://devhorizan-dashboard.vercel.app/";  // Redirect to Dashboard
             })
             .catch((error) => {
                 showToast(`❌ ${error.message}`, "error");
